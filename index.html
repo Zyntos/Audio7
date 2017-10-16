@@ -5,7 +5,7 @@
 
 </head>
 <body>
-    <select id="select">
+    <select id="select" onchange="play()">
     <option value="cave">Cave</option>
     <option value="church">Church</option>
     <option value="garage">Garage</option>
@@ -17,27 +17,54 @@
 
 
 <script>
-  var context = new AudioContext();
-var sound = new Audio("sound.wav");
-var source = context.createMediaElementSource(sound);
-var convolver = context.createConvolver();
+    var context = new AudioContext();
+    var sound = new Audio("sound.wav");
+    var source = context.createMediaElementSource(sound);
+    var convolver = context.createConvolver();
 
-source.connect(convolver);
-convolver.connect(context.destination);
+    source.connect(convolver);
+    convolver.connect(context.destination);
 
-var request = new XMLHttpRequest();
-request.open("GET",  "church.wav", true);
-request.responseType = “arraybuffer";
 
-request.onload = function () {
-     var undecodedAudio = request.response;
-     context.decodeAudioData(undecodedAudio, function (buffer) {
-          convolver.buffer = buffer;
-          convolver.normalize = true;
-     });
-};
-request.send();
-sound.play();
+
+    var request = new XMLHttpRequest();
+    request.open("GET",  "cave.wav", true);
+    request.responseType = "arraybuffer";
+
+    request.onload = function () {
+         var undecodedAudio = request.response;
+         context.decodeAudioData(undecodedAudio, function (buffer) {
+              convolver.buffer = buffer;
+              convolver.normalize = true;
+         });
+    };
+
+
+    function play(){
+       if(document.getElementById("select").value == "cave"){
+        request.open("GET",  "cave.wav", true);
+        request.send();
+        sound.play();
+       }
+        else if(document.getElementById("select").value == "church"){
+        request.open("GET",  "church.wav", true);
+        request.send();
+        sound.play();
+       }
+        else if(document.getElementById("select").value == "garage"){
+        request.open("GET",  "garage.wav", true);
+        request.send();
+        sound.play();
+       }
+        else if(document.getElementById("select").value == "room"){
+        request.open("GET",  "room.wav", true);
+        request.send();
+        sound.play();
+       }
+
+
+    };
+
 
 </script>
 </body>
